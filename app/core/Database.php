@@ -7,7 +7,9 @@ class Database {
         $config = require_once __DIR__ . '/../../config/database.php';
         
         try {
-            $dsn = "mysql:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}";
+            // Tambahkan port jika ada
+            $port = $config['port'] ?? 3306;
+            $dsn = "mysql:host={$config['host']};port={$port};dbname={$config['dbname']};charset={$config['charset']}";
             $this->conn = new PDO($dsn, $config['username'], $config['password']);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
