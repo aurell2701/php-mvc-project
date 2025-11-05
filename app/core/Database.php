@@ -4,13 +4,13 @@ class Database {
     private $conn;
 
     private function __construct() {
-        // Railway akan otomatis menyediakan variabel ini:
+        // Ambil env (Railway pakai nama dengan underscore, tapi fallback ke tanpa underscore)
         $config = [
-            'host'     => getenv('MYSQLHOST') ?: 'localhost',
-            'port'     => getenv('MYSQLPORT') ?: 3306,
-            'dbname'   => getenv('MYSQLDATABASE') ?: 'mvc_db',
-            'username' => getenv('MYSQLUSER') ?: 'root',
-            'password' => getenv('MYSQLPASSWORD') ?: '',
+            'host'     => getenv('MYSQL_HOST') ?: getenv('MYSQLHOST') ?: 'localhost',
+            'port'     => getenv('MYSQL_PORT') ?: getenv('MYSQLPORT') ?: 3306,
+            'dbname'   => getenv('MYSQL_DATABASE') ?: getenv('MYSQLDATABASE') ?: 'mvc_db',
+            'username' => getenv('MYSQL_USER') ?: getenv('MYSQLUSER') ?: 'root',
+            'password' => getenv('MYSQL_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: getenv('MYSQL_ROOT_PASSWORD') ?: '',
             'charset'  => 'utf8mb4'
         ];
 
@@ -20,8 +20,14 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // Tampilkan host & user agar lebih mudah debug (sementara aja)
-            die("Connection failed: " . $e->getMessage() . "<br>Host: {$config['host']}<br>User: {$config['username']}");
+            // Debug sementara: tampilkan variabel yang terbaca
+            die("
+                Connection failed: {$e->getMessage()}<br>
+                Host: {$config['host']}<br>
+                User: {$config['username']}<br>
+                DB: {$config['dbname']}<br>
+                Port: {$config['port']}
+            ");
         }
     }
 
