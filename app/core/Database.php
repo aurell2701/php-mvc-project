@@ -4,15 +4,30 @@ class Database {
     private $conn;
 
     private function __construct() {
-        // Ambil env (Railway pakai nama dengan underscore, tapi fallback ke tanpa underscore)
+        // Railway biasanya menggunakan nama environment dengan underscore (_)
+        // tapi kita tambahkan fallback agar tetap bisa dipakai di lokal.
         $config = [
-            'host'     => getenv('MYSQL_HOST') ?: getenv('MYSQLHOST') ?: 'localhost',
-            'port'     => getenv('MYSQL_PORT') ?: getenv('MYSQLPORT') ?: 3306,
-            'dbname'   => getenv('MYSQL_DATABASE') ?: getenv('MYSQLDATABASE') ?: 'mvc_db',
-            'username' => getenv('MYSQL_USER') ?: getenv('MYSQLUSER') ?: 'root',
-            'password' => getenv('MYSQL_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: getenv('MYSQL_ROOT_PASSWORD') ?: '',
+            'host'     => getenv('MYSQLHOST') ?: getenv('MYSQL_HOST') ?: 'localhost',
+            'port'     => getenv('MYSQLPORT') ?: getenv('MYSQL_PORT') ?: 3306,
+            'dbname'   => getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: 'mvc_db',
+            'username' => getenv('MYSQLUSER') ?: getenv('MYSQL_USER') ?: 'root',
+            'password' => getenv('MYSQLPASSWORD') ?: getenv('MYSQL_PASSWORD') ?: getenv('MYSQL_ROOT_PASSWORD') ?: '',
             'charset'  => 'utf8mb4'
         ];
+
+        // Debug (sementara, biar kita bisa lihat variabelnya kebaca atau nggak)
+        echo "<pre>";
+        print_r([
+            'MYSQL_HOST' => getenv('MYSQL_HOST'),
+            'MYSQLHOST' => getenv('MYSQLHOST'),
+            'MYSQL_DATABASE' => getenv('MYSQL_DATABASE'),
+            'MYSQLDATABASE' => getenv('MYSQLDATABASE'),
+            'MYSQL_USER' => getenv('MYSQL_USER'),
+            'MYSQLUSER' => getenv('MYSQLUSER'),
+            'MYSQL_PASSWORD' => getenv('MYSQL_PASSWORD') ? '***SET***' : 'EMPTY',
+            'MYSQLPASSWORD' => getenv('MYSQLPASSWORD') ? '***SET***' : 'EMPTY',
+        ]);
+        echo "</pre>";
 
         try {
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['dbname']};charset={$config['charset']}";
@@ -20,13 +35,12 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // Debug sementara: tampilkan variabel yang terbaca
             die("
-                Connection failed: {$e->getMessage()}<br>
-                Host: {$config['host']}<br>
-                User: {$config['username']}<br>
-                DB: {$config['dbname']}<br>
-                Port: {$config['port']}
+                <b>Connection failed:</b> {$e->getMessage()}<br>
+                <b>Host:</b> {$config['host']}<br>
+                <b>User:</b> {$config['username']}<br>
+                <b>DB:</b> {$config['dbname']}<br>
+                <b>Port:</b> {$config['port']}
             ");
         }
     }
