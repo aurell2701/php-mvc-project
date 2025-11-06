@@ -1,7 +1,7 @@
 <?php
 // Railway menyediakan MySQL variables otomatis
 return [
-    'host' => getenv('MYSQLHOST') ?: 'mysql.railway.internal',
+    'host' => getenv('MYSQLHOST') ?: 'php-mvc-project-production-67e4.up.railway.app',
     'port' => getenv('MYSQLPORT') ?: '3306',
     'dbname' => getenv('MYSQLDATABASE') ?: 'railway',
     'username' => getenv('MYSQLUSER') ?: 'root',
