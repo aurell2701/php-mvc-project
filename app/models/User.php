@@ -3,7 +3,7 @@ namespace App\Models;
 use App\Core\Model;
 
 class User extends Model {
-    protected $table = 'users';
+    protected $table = 'aurell';
     
     public function findByEmail($email) {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE email = :email");
